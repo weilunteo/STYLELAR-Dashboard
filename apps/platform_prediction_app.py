@@ -3,21 +3,20 @@ import pandas as pd
 import numpy as np
 from prediction import predict
 from components import common
-from datetime import datetime
+from datetime import datetime, date, time
 
 
 def app():
     df = pd.read_csv('data/platform_dataset.csv')
 
     platform_prediction = """
-    <h1>Platform Prediction</h1>
     <p style="text-align: justify">This is a proposed CatBoost classification model to predict if there will be 
     a successful transaction based on selected features. This will help sellers determine the ideal time during 
     the day of a month to promote their products, and possibly introduce promotion to boost textile sales.</p>
     </p>
     """
 
-    st.title("Predicting a successful transaction")
+    st.title("Transaction Prediction (For Sellers)")
     st.markdown(platform_prediction, unsafe_allow_html=True)
 
     st.header("Input Features")
@@ -26,14 +25,13 @@ def app():
 
     date_of_purchase = st.date_input(
         label='Date',
-        value=datetime.date.today(),
-        min_value=datetime.date(2020, 1, 1)
+        value=date(2020,1,1)
 
     )
 
     time_of_transaction = st.time_input(
         label='Time',
-        value=datetime.time(0, 0)
+        value=time(0, 0)
         
     )
 
@@ -60,6 +58,12 @@ def app():
         value=1,
         step=1
     )
+
+    # Convert date_of_purchase to datetime object and then to Unix timestamp
+    # date_of_purchase = str(date_of_purchase)
+    date_str = date_of_purchase.strftime('%Y-%m-%d')
+    datetime_obj = datetime.strptime(date_str, '%Y-%m-%d')
+    st.write(datetime_obj)
 
     user_variables = [date_of_purchase, time_of_transaction, qty_of_purchase, cost_of_purchase, rating]
     variable_names = ["Date of Purchase", "Time of Transaction", "Qty of Purchase", "Cost of Purchase", "Rating"]
