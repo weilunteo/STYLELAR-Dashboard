@@ -59,11 +59,19 @@ def app():
         step=1
     )
 
-    # Convert date_of_purchase to datetime object and then to Unix timestamp
-    # date_of_purchase = str(date_of_purchase)
-    date_str = date_of_purchase.strftime('%Y-%m-%d')
-    datetime_obj = datetime.strptime(date_str, '%Y-%m-%d')
-    st.write(datetime_obj)
+
+    # st.write(date_of_purchase, type(date_of_purchase))
+    # st.write(time_of_transaction, type(time_of_transaction))
+    
+    date_of_purchase = date_of_purchase.strftime('%Y-%m-%d')
+    st.write(date_of_purchase, type(date_of_purchase))
+
+    # format the time as a string without the seconds
+    time_of_transaction = time_of_transaction.strftime('%H:%M')
+    st.write(time_of_transaction, type(time_of_transaction))
+    # datetime_obj = datetime.strptime(date_str, '%Y-%m-%d')
+    # time_str = datetime_obj.strftime('%H:%M:%S')
+    # st.write(time_str, type(time_str))
 
     user_variables = [date_of_purchase, time_of_transaction, qty_of_purchase, cost_of_purchase, rating]
     variable_names = ["Date of Purchase", "Time of Transaction", "Qty of Purchase", "Cost of Purchase", "Rating"]
@@ -71,19 +79,19 @@ def app():
     if st.button("Predict"):
         prediction = common.get_prediction(user_variables)[0]
         confidence = common.get_prediction(user_variables)[1]
-        percentile_list = common.get_percentile(user_variables, df)
+        # percentile_list = common.get_percentile(user_variables, df)
 
         st.write("The variables that you have chosen are:")
         
         for i in range(len(user_variables)):
-            st.write(variable_names[i],": ", user_variables[i], ", ", str(round(percentile_list[i], 2))+" percentile")
+            # st.write(variable_names[i],": ", user_variables[i], ", ", str(round(percentile_list[i], 2))+" percentile")
 
             if prediction == 1:
                 st.write("Hooray! This is a good time to list or promote your products!")
             else:
                 st.write("Oh no, this is not a good time to list or promote your product.")
 
-        st.write("Confidence level:", round(confidence, 2))
+        # st.write("Confidence level:", round(confidence, 2))
 
 
 
