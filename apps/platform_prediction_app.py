@@ -9,10 +9,12 @@ from datetime import datetime, date, time
 def app():
     df = pd.read_csv('data/platform_dataset.csv')
 
+    st.write(df.head())
+
     platform_prediction = """
-    <p style="text-align: justify">This is a proposed CatBoost classification model to predict if there will be 
+    <p style="text-align: justify">A Logistic Regression model is used to predict if there will be 
     a successful transaction based on selected features. This will help sellers determine the ideal time during 
-    the day of a month to promote their products, and possibly introduce promotion to boost textile sales.</p>
+    the day to promote their products, and possibly introduce promotions to boost textile sales.</p>
     </p>
     """
 
@@ -30,13 +32,13 @@ def app():
     # )
 
     time_of_transaction = st.time_input(
-        label='Time',
+        label='Time of Transaction',
         value=time(0, 0)
         
     )
 
     qty_of_purchase = st.slider(
-        label='Quantity',
+        label='Quantity of Product',
         min_value=int(df['Qty of Purchase'].min()),
         max_value=int(df['Qty of Purchase'].max()),
         value=1,
@@ -44,7 +46,7 @@ def app():
     )
 
     cost_of_purchase = st.slider(
-        label='Cost',
+        label='Cost of Product',
         min_value=int(df['Cost of Purchase'].min()),
         max_value=int(df['Cost of Purchase'].max()),
         value=1,
@@ -52,7 +54,7 @@ def app():
     )
 
     rating = st.slider(
-        label='Rating',
+        label='Rating of Purchase',
         min_value=int(df['Rating'].min()),
         max_value=int(df['Rating'].max()),
         value=1,
@@ -84,16 +86,16 @@ def app():
         confidence = common.get_prediction(user_variables)[1]
         # percentile_list = common.get_percentile(user_variables, df)
 
-        st.write("The variables that you have chosen are:")
+        # st.write("The variables that you have chosen are:")
         
-        for i in range(len(user_variables)):
+        # for i in range(len(user_variables)):
             # st.write(variable_names[i],": ", user_variables[i], ", ", str(round(percentile_list[i], 2))+" percentile")
-            st.write(variable_names[i],": ", user_variables[i])
+            # st.write(variable_names[i],": ", user_variables[i])
 
         if prediction == 1:
-            st.write("Hooray! This is a good time to list or promote your products :) ")
+            st.write("Hooray! This is a good time to list or promote your product. ")
         else:
-            st.write("Oh no, this is not a good time to list or promote your product :( ")
+            st.write("Oh no, this is not a good time to list or promote your product. ")
 
         st.write("Confidence level:", round(confidence, 2))
 

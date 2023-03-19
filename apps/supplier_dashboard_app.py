@@ -7,23 +7,26 @@ def app():
     header = '''
         <h1>Treemap Dashboard (For Suppliers)</h1>
         <p style="text-align: justify">
-        This is a dashboard to help suppliers visually understand the distribution of their textile materials 
-        and products in the market, by country and also month.
+        This dashboard helps suppliers to visualise the demand/distribution of the textile materials 
+        and products exported by country, month and type of productS.
         </p>
     '''
     st.markdown(header, unsafe_allow_html = True)
 
     # Load the data
-    supplier_df = pd.read_csv("data/textile_export_data.csv")
-    # st.write(supplier_df.head())
+    supplier_df = pd.read_csv("data/supplier_dataset.csv")
 
     ## Treemap 1 - Country demand
-    df = pd.DataFrame({
-    'countries_exported': ['Vietnam', 'Malaysia', 'Indonesia', 'United States', 'China', 'Japan', 'Hong Kong', 'United Kingdom', 'Pakistan', 'Bangladesh', 'India', 'Turkey', 'Korea', 'Austria', 'Cambodia', 'Ukraine', 'Germany', 'Netherlands', 'France', 'Italy'],
-    'qty_exported': [183658, 145270, 142822, 117830, 113158, 109436, 85612, 71378, 54813, 51622, 38243, 31082, 28595, 21918, 12694, 12607, 12482, 11196, 10707, 10361],
-    'continent': ['Asia', 'Asia', 'Asia', 'North America', 'Asia', 'Asia', 'Asia', 'Europe', 'Asia', 'Asia', 'Asia','Asia','Asia', 'Europe', 'Asia','Europe', 'Europe', 'Europe','Europe', 'Europe' ]
-    })
-    st.header("Country Demand")
+
+    supplier_agg = supplier_df.groupby('countries_exported')['qty_exported'].sum().sort_values(ascending=False)
+    df = pd.DataFrame(supplier_agg).reset_index()
+
+    # st.write(df)
+    continent = ['Asia', 'Asia', 'Asia', 'Asia', 'North America', 'Asia', 'Asia', 'Europe', 'Asia', 'Asia', 'Asia', 'Asia', 'Europe', 'Europe', 'Europe', 'Europe', 'Europe', 'Europe', 'Asia', 'Europe']
+
+    df['continent'] = continent
+
+    st.header("Continent and Country")
     fig = px.treemap(df, 
                      path=[px.Constant("World"), 'continent', 'countries_exported'], 
                      values='qty_exported',
@@ -40,8 +43,8 @@ def app():
 
     st.header("Month of Exports")
 
-    df = supplier_df.groupby(['month_of_export', 'year_of_export'])['qty_exported'].sum()
-    df = df.reset_index()
+    df2 = supplier_df.groupby(['month_of_export', 'year_of_export'])['qty_exported'].sum()
+    df2 = pd.DataFrame(df2).reset_index()
   
     # Define a dictionary to map month numbers to their names
     month_names = {
@@ -60,12 +63,14 @@ def app():
     }
 
     # Replace month numbers with their names
-    df['month_of_export'] = df['month_of_export'].replace(month_names)
+    df2['month_of_export'] = df2['month_of_export'].replace(month_names)
 
     # Sort the DataFrame by the "month_of_export" column
-    df = df.sort_values(by=['year_of_export', 'month_of_export'], ascending=[True, True])
+    df2 = df2.sort_values(by=['year_of_export', 'month_of_export'], ascending=[True, True])
 
-    fig2 = px.treemap(df, 
+    # st.write(df2)
+
+    fig2 = px.treemap(df2, 
                     path=[px.Constant("Year"), 'year_of_export', 'month_of_export'], 
                     values='qty_exported',
                     color='year_of_export',
@@ -74,21 +79,29 @@ def app():
     st.plotly_chart(fig2)
 
 
-
-
-
     ## Treemap 3 - Type of Products and materials
     st.header("Type of Products and Materials")
 
-    df3 = supplier_df.groupby(['type_of_textile', 'type_of_product'])['qty_exported'].sum().sort_values(ascending=False)
+    df3 = supplier_df.groupby(['textile_type', 'type_of_product'])['qty_exported'].sum().sort_values(ascending=False)
     df3 = df3.reset_index()
     fig3 = px.treemap(df3, 
-                      path=['type_of_textile', 'type_of_product'], 
+                      path=['textile_type', 'type_of_product'], 
                       values='qty_exported',
-                      color='type_of_textile',
+                      color='textile_type',
                       color_discrete_sequence=['#00a0e3', '#0072c6', '#004b87'])
     fig3.data[0].hovertemplate = '%{label}<br>Quantity Exported:%{value}'
     st.plotly_chart(fig3)
+
+
+    ### 4 - Time Series Line Graph of Sales (per product)
+
+    # st.header("Time Series Line Graph of Sales (per product)")
+
+    # df4 = supplier_df.groupby(['year_of_export', 'month_of_export', 'type_of_product'])['qty_exported'].sum()
+    # df4 = df4.reset_index()
+    # fig4 = 
+
+
 
 if __name__ == '__main__':
     app()
