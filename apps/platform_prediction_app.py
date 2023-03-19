@@ -23,11 +23,11 @@ def app():
 
     # ['Date of Purchase', 'Time of Transaction', 'Qty of Purchase', 'Cost of Purchase', 'Rating']
 
-    date_of_purchase = st.date_input(
-        label='Date',
-        value=date(2020,1,1)
+    # date_of_purchase = st.date_input(
+    #     label='Date',
+    #     value=date(2020,1,1)
 
-    )
+    # )
 
     time_of_transaction = st.time_input(
         label='Time',
@@ -59,25 +59,28 @@ def app():
         step=1
     )
 
+    
+    # date_of_purchase = date_of_purchase.strftime('%Y-%m-%d')
+    time_of_transaction = time_of_transaction.strftime('%H:%M')     # format the time as a string without the seconds
+
+    # Extract the hour and minute components from the 'Time of Transaction' column
+    # Convert the time of transaction string to hour and minute components
+    hour = int(time_of_transaction.split(':')[0])
+    minute = int(time_of_transaction.split(':')[1])
+
+    # Convert the hour and minute components to a fraction of the total number of minutes in a day
+    time_of_transaction = (hour * 60 + minute) / 1440.0
 
     # st.write(date_of_purchase, type(date_of_purchase))
     # st.write(time_of_transaction, type(time_of_transaction))
-    
-    date_of_purchase = date_of_purchase.strftime('%Y-%m-%d')
-    st.write(date_of_purchase, type(date_of_purchase))
 
-    # format the time as a string without the seconds
-    time_of_transaction = time_of_transaction.strftime('%H:%M')
-    st.write(time_of_transaction, type(time_of_transaction))
-    # datetime_obj = datetime.strptime(date_str, '%Y-%m-%d')
-    # time_str = datetime_obj.strftime('%H:%M:%S')
-    # st.write(time_str, type(time_str))
 
-    user_variables = [date_of_purchase, time_of_transaction, qty_of_purchase, cost_of_purchase, rating]
-    variable_names = ["Date of Purchase", "Time of Transaction", "Qty of Purchase", "Cost of Purchase", "Rating"]
+    user_variables = [time_of_transaction, qty_of_purchase, cost_of_purchase, rating]
+    variable_names = ["Time of Transaction", "Qty of Purchase", "Cost of Purchase", "Rating"]
 
     if st.button("Predict"):
         prediction = common.get_prediction(user_variables)[0]
+        # st.write(prediction)
         confidence = common.get_prediction(user_variables)[1]
         # percentile_list = common.get_percentile(user_variables, df)
 
@@ -85,13 +88,14 @@ def app():
         
         for i in range(len(user_variables)):
             # st.write(variable_names[i],": ", user_variables[i], ", ", str(round(percentile_list[i], 2))+" percentile")
+            st.write(variable_names[i],": ", user_variables[i])
 
-            if prediction == 1:
-                st.write("Hooray! This is a good time to list or promote your products!")
-            else:
-                st.write("Oh no, this is not a good time to list or promote your product.")
+        if prediction == 1:
+            st.write("Hooray! This is a good time to list or promote your products :) ")
+        else:
+            st.write("Oh no, this is not a good time to list or promote your product :( ")
 
-        # st.write("Confidence level:", round(confidence, 2))
+        st.write("Confidence level:", round(confidence, 2))
 
 
 
