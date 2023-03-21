@@ -2,13 +2,17 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import streamlit as st
+import calendar
+import altair as alt
 
 def app():
     header = '''
-        <h1>Treemap Dashboard (For Suppliers)</h1>
+        <h1>Market Insights (For Suppliers)</h1>
         <p style="text-align: justify">
-        This dashboard helps suppliers to visualise the demand/distribution of the textile materials 
-        and products exported by country, month and type of productS.
+        This dashboard provides suppliers with a visual representation of the global demand for textile materials and products
+        geographically and temporally. This will help suppliers know a country's demand and 
+        determine the best products and materials to export their products to, 
+        as well as the best time of the year to export textiles.
         </p>
     '''
     st.markdown(header, unsafe_allow_html = True)
@@ -26,13 +30,18 @@ def app():
 
     df['continent'] = continent
 
-    st.header("Continent and Country")
+    st.subheader("Country and Continent")
+    desc1 = """
+    <p style="text-align: justify;">This treemap shows the quantity of textile products exported 
+    by different countries around the world, grouped by continent.</p>"""
+    st.caption(desc1, unsafe_allow_html=True)
+
     fig = px.treemap(df, 
                      path=[px.Constant("World"), 'continent', 'countries_exported'], 
                      values='qty_exported',
                      color='continent',
-                     color_continuous_scale='RdBu',
-                     color_discrete_sequence=['purple', 'green', 'dark blue', 'salmon'])
+                     color_continuous_scale='RdBu')
+                    #  color_discrete_sequence=['purple', 'green', 'dark blue', 'salmon'])
     fig.data[0].hovertemplate = '%{label}<br>Quantity Exported:%{value}'
     st.plotly_chart(fig)
 
@@ -41,7 +50,12 @@ def app():
 
     ## Treemap 2 - Month of exports
 
-    st.header("Month of Exports")
+    st.subheader("Year and Month")
+
+    desc2 = """
+    <p style="text-align: justify;">This treemap shows the quantity of products exported 
+    by different countries around the world, grouped by year and month of export.</p>"""
+    st.caption(desc2, unsafe_allow_html=True)
 
     df2 = supplier_df.groupby(['month_of_export', 'year_of_export'])['qty_exported'].sum()
     df2 = pd.DataFrame(df2).reset_index()
@@ -74,13 +88,19 @@ def app():
                     path=[px.Constant("Year"), 'year_of_export', 'month_of_export'], 
                     values='qty_exported',
                     color='year_of_export',
-                    color_discrete_sequence=['#00a0e3', '#0072c6', '#004b87'])
+                    color_continuous_scale='RdBu')
     fig2.data[0].hovertemplate = '%{label}<br>Quantity Exported:%{value}'
     st.plotly_chart(fig2)
 
 
     ## Treemap 3 - Type of Products and materials
-    st.header("Type of Products and Materials")
+    st.subheader("Type of Product and Material")
+
+    desc3 = """
+    <p style="text-align: justify;">This treemap shows the quantity of textile products exported by 
+    different countries around the world, grouped by type of product and textile material.</p>"""
+    st.caption(desc3, unsafe_allow_html=True)
+
 
     df3 = supplier_df.groupby(['textile_type', 'type_of_product'])['qty_exported'].sum().sort_values(ascending=False)
     df3 = df3.reset_index()
@@ -88,18 +108,63 @@ def app():
                       path=['textile_type', 'type_of_product'], 
                       values='qty_exported',
                       color='textile_type',
-                      color_discrete_sequence=['#00a0e3', '#0072c6', '#004b87'])
+                      color_continuous_scale='RdBu')
     fig3.data[0].hovertemplate = '%{label}<br>Quantity Exported:%{value}'
     st.plotly_chart(fig3)
 
 
-    ### 4 - Time Series Line Graph of Sales (per product)
+    ### 4 - Bar Chart for Month of Exports
+    st.subheader("Trend for Month of Exports")
 
-    # st.header("Time Series Line Graph of Sales (per product)")
+    desc4 = """
+    <p style="text-align: justify;"> This is a bar chart that shows the overall distribution in the quantity of 
+    textile products exported each month. </p>"""
+    st.caption(desc4, unsafe_allow_html=True)
 
-    # df4 = supplier_df.groupby(['year_of_export', 'month_of_export', 'type_of_product'])['qty_exported'].sum()
-    # df4 = df4.reset_index()
-    # fig4 = 
+    df4 = supplier_df.groupby(['year_of_export', 'month_of_export'])['qty_exported'].sum()
+    df4 = df4.reset_index()
+    months = [calendar.month_name[i][:3] for i in range(1, 13)]
+    # st.write(months)
+    df4['month_of_export'] = pd.Categorical(df4['month_of_export'], categories=months, ordered=True)
+
+    # sort the dataframe by month_of_export column
+    df4 = df4.sort_values('month_of_export')
+    # st.write(df4)
+
+    # st.write(df)
+
+    # Create the bar chart
+    fig4 = px.bar(df4, 
+                x='month_of_export', 
+                y='qty_exported',
+                color='qty_exported',
+                color_discrete_sequence='RdBu')
+
+    st.plotly_chart(fig4)
+
+    ### 5 - Time Series Line Graph of Sales (per product)
+    st.subheader("Demand for Textile Product Over the Years")
+
+    desc5 = """
+    <p style="text-align: justify;"> This is a time series line chart for the quantity 
+    of your selected textile product exported each year, to better estimate the product's life cycle.
+    </p>"""
+    st.caption(desc5, unsafe_allow_html=True)
+
+    df5 = supplier_df.groupby(['year_of_export', 'type_of_product'])['qty_exported'].sum()
+    df5 = df5.reset_index()
+
+    # filter dataframe by type_of_product
+    product = st.selectbox('Select Product', df5['type_of_product'].unique())
+    df_product = df5[df5['type_of_product'] == product]
+
+
+    # create time series chart using Altair
+    fig5 = px.line(df_product, x="year_of_export", y="qty_exported")
+
+    # show chart in Streamlit
+    st.plotly_chart(fig5)
+
 
 
 

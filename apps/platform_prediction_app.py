@@ -9,7 +9,7 @@ from datetime import datetime, date, time
 def app():
     df = pd.read_csv('data/platform_dataset.csv')
 
-    st.write(df.head())
+    # st.write(df.head())
 
     platform_prediction = """
     <p style="text-align: justify">A Logistic Regression model is used to predict if there will be 
