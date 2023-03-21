@@ -31,10 +31,10 @@ def app():
     df['continent'] = continent
 
     st.subheader("Country and Continent")
-    desc1 = """
-    <p style="text-align: justify;">This treemap shows the quantity of textile products exported 
-    by different countries around the world, grouped by continent.</p>"""
-    st.caption(desc1)
+    # desc1 = """
+    # <p style="text-align: justify;">This treemap shows the quantity of textile products exported 
+    # by different countries around the world, grouped by continent.</p>"""
+    st.caption("This treemap shows the quantity of textile products exported by different countries around the world, grouped by continent")
 
     fig = px.treemap(df, 
                      path=[px.Constant("World"), 'continent', 'countries_exported'], 
@@ -52,10 +52,10 @@ def app():
 
     st.subheader("Year and Month")
 
-    desc2 = """
-    <p style="text-align: justify;">This treemap shows the quantity of products exported 
-    by different countries around the world, grouped by year and month of export.</p>"""
-    st.caption(desc2)
+    # desc2 = """
+    # <p style="text-align: justify;">This treemap shows the quantity of products exported 
+    # by different countries around the world, grouped by year and month of export.</p>"""
+    st.caption("This treemap shows the quantity of products exported by different countries around the world, grouped by year and month of export.")
 
     df2 = supplier_df.groupby(['month_of_export', 'year_of_export'])['qty_exported'].sum()
     df2 = pd.DataFrame(df2).reset_index()
@@ -96,10 +96,10 @@ def app():
     ## Treemap 3 - Type of Products and materials
     st.subheader("Type of Product and Material")
 
-    desc3 = """
-    <p style="text-align: justify;">This treemap shows the quantity of textile products exported by 
-    different countries around the world, grouped by type of product and textile material.</p>"""
-    st.caption(desc3)
+    # desc3 = """
+    # <p style="text-align: justify;">This treemap shows the quantity of textile products exported by 
+    # different countries around the world, grouped by type of product and textile material.</p>"""
+    st.caption("This treemap shows the quantity of textile products exported by different countries around the world, grouped by type of product and textile material.")
 
 
     df3 = supplier_df.groupby(['textile_type', 'type_of_product'])['qty_exported'].sum().sort_values(ascending=False)
@@ -116,10 +116,10 @@ def app():
     ### 4 - Bar Chart for Month of Exports
     st.subheader("Trend for Month of Exports")
 
-    desc4 = """
-    <p style="text-align: justify;"> This is a bar chart that shows the overall distribution in the quantity of 
-    textile products exported each month. </p>"""
-    st.caption(desc4)
+    # desc4 = """
+    # <p style="text-align: justify;"> This is a bar chart that shows the overall distribution in the quantity of 
+    # textile products exported each month. </p>"""
+    st.caption("This is a bar chart that shows the overall distribution in the quantity of textile products exported each month. ")
 
     df4 = supplier_df.groupby(['year_of_export', 'month_of_export'])['qty_exported'].sum()
     df4 = df4.reset_index()
@@ -145,11 +145,11 @@ def app():
     ### 5 - Time Series Line Graph of Sales (per product)
     st.subheader("Demand for Textile Product Over the Years")
 
-    desc5 = """
-    <p style="text-align: justify;"> This is a time series line chart for the quantity 
-    of your selected textile product exported each year, to better estimate the product's life cycle.
-    </p>"""
-    st.caption(desc5)
+    # desc5 = """
+    # <p style="text-align: justify;"> This is a time series line chart for the quantity 
+    # of your selected textile product exported each year, to better estimate the product's life cycle.
+    # </p>"""
+    st.caption("This is a time series line chart for the quantity of your selected textile product exported each year, to better estimate the product's life cycle.")
 
     df5 = supplier_df.groupby(['year_of_export', 'type_of_product'])['qty_exported'].sum()
     df5 = df5.reset_index()
