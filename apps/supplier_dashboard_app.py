@@ -34,7 +34,7 @@ def app():
     desc1 = """
     <p style="text-align: justify;">This treemap shows the quantity of textile products exported 
     by different countries around the world, grouped by continent.</p>"""
-    st.caption(desc1, unsafe_allow_html=True)
+    st.caption(desc1)
 
     fig = px.treemap(df, 
                      path=[px.Constant("World"), 'continent', 'countries_exported'], 
@@ -55,7 +55,7 @@ def app():
     desc2 = """
     <p style="text-align: justify;">This treemap shows the quantity of products exported 
     by different countries around the world, grouped by year and month of export.</p>"""
-    st.caption(desc2, unsafe_allow_html=True)
+    st.caption(desc2)
 
     df2 = supplier_df.groupby(['month_of_export', 'year_of_export'])['qty_exported'].sum()
     df2 = pd.DataFrame(df2).reset_index()
@@ -99,7 +99,7 @@ def app():
     desc3 = """
     <p style="text-align: justify;">This treemap shows the quantity of textile products exported by 
     different countries around the world, grouped by type of product and textile material.</p>"""
-    st.caption(desc3, unsafe_allow_html=True)
+    st.caption(desc3)
 
 
     df3 = supplier_df.groupby(['textile_type', 'type_of_product'])['qty_exported'].sum().sort_values(ascending=False)
@@ -119,7 +119,7 @@ def app():
     desc4 = """
     <p style="text-align: justify;"> This is a bar chart that shows the overall distribution in the quantity of 
     textile products exported each month. </p>"""
-    st.caption(desc4, unsafe_allow_html=True)
+    st.caption(desc4)
 
     df4 = supplier_df.groupby(['year_of_export', 'month_of_export'])['qty_exported'].sum()
     df4 = df4.reset_index()
@@ -149,7 +149,7 @@ def app():
     <p style="text-align: justify;"> This is a time series line chart for the quantity 
     of your selected textile product exported each year, to better estimate the product's life cycle.
     </p>"""
-    st.caption(desc5, unsafe_allow_html=True)
+    st.caption(desc5)
 
     df5 = supplier_df.groupby(['year_of_export', 'type_of_product'])['qty_exported'].sum()
     df5 = df5.reset_index()
