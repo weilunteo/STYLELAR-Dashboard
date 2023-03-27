@@ -23,4 +23,4 @@ The folders are organised in the following manner:
 1. [Apps](./apps) - supplier visualisation plots and seller prediction model for the streamlit web dashboard
 2. [Components](./components) - code for seller prediction model and saved models
 3. [Assets](./data) - supplier and seller datasets
-4. [notebooks](./notebooks) - initial workings and code to generate bias for target variable 'return' in seller dataset 
+4. [Notebooks](./notebooks) - initial workings and code to generate bias for target variable 'return' in seller dataset 
