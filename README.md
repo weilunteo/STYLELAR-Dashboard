@@ -1,5 +1,5 @@
 
-### Textile Dashboard 
+# STYLE:LAR 
 
 This is a proof of concept for our 'IS215: Digital Business Transformation and Technologies' project. This interactive dashboard allows both textile suppliers and textile sellers to tap on data to drive their business decisions. It consists of a visualisation charts for suppliers and a prediction model for sellers.
 
@@ -21,6 +21,6 @@ streamlit run app.py
 The folders are organised in the following manner:
 
 1. [Apps](./apps) - supplier visualisation plots and seller prediction model for the streamlit web dashboard
-2. [Components](./components) - code for seller prediction model and saved models
+2. [Components](./components) - finalised codes for seller prediction model and saved logreg/catboost/xgboost models
 3. [Assets](./data) - supplier and seller datasets
 4. [Notebooks](./notebooks) - initial workings and code to generate bias for target variable 'return' in seller dataset 
